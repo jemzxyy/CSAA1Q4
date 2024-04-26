@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inventory System</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f5f9; 
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff; 
+        border-radius: 15px; 
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+    }
+    h2 {
+        text-align: center;
+        color: #446e88; 
+    }
+    h4 {
+        text-align: center;
+        color: #446e88;
+        margin-top: 10px;
+    }
+    label {
+        color: #446e88; 
+    }
+    input[type="text"],
+    input[type="number"] {
+        width: 200px;
+        padding: 8px;
+        margin: 5px 0;
+        border-radius: 5px; 
+        border: 1px solid #ccc; 
+    }
+    button {
+        padding: 10px 20px;
+        margin: 5px 0;
+        background-color: #6ab8e0; 
+        border: none;
+        border-radius: 5px; 
+        color: #fff; 
+        cursor: pointer;
+        transition: background-color 0.3s ease; 
+    }
+    button:hover {
+        background-color: #4e96c8; 
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #dbeaf4; 
+    }
+</style>
+</head>
+<body onload="welcome()">
+
+<div class="container">
+    <h2>Inventory System</h2>
+    <h4>Group of Garcia, Genecera, Fermasis</h4>
+
+    <div>
+        <label for="itemName">Item Name:</label>
+        <input type="text" id="itemName">
+        <label for="itemQty">Quantity:</label>
+        <input type="number" id="itemQty">
+        <button onclick="addItem()">Add Item</button>
+    </div>
+
+    <div>
+        <label for="itemNameAdd">Item Name:</label>
+        <input type="text" id="itemNameAdd">
+        <label for="itemQtyAdd">Quantity:</label>
+        <input type="number" id="itemQtyAdd">
+        <button onclick="addNoOfItem()">Add Quantity</button>
+    </div>
+
+    <div>
+        <label for="itemNameSub">Item Name:</label>
+        <input type="text" id="itemNameSub">
+        <label for="itemQtySub">Quantity:</label>
+        <input type="number" id="itemQtySub">
+        <button onclick="subNoOfItem()">Subtract Quantity</button>
+    </div>
+
+    <div>
+        <label for="itemNameRemove">Item Name:</label>
+        <input type="text" id="itemNameRemove">
+        <button onclick="removeItem()">Remove Item</button>
+    </div>
+
+    <table id="inventoryTable">
+        <tr>
+            <th>Item Name</th>
+            <th>Number of Items (Stock)</th>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var supply = [];
+
+    function welcome (){
+        alert("Welcome user! This is a simple inventory system where you can add new items to your inventory, adjust quantities, and remove items if needed. Enjoy and have fun!");
+    }
+
+    function addItem() {
+        var itemName = document.getElementById('itemName').value;
+        var itemQty = parseInt(document.getElementById('itemQty').value);
+        var existingItem = supply.find(item => item.itemName === itemName);
+        if (existingItem) {
+            console.log(itemName + " already exists in the inventory.");
+        } else {
+            supply.push({itemName: itemName, noOfItem: itemQty});
+            console.log(itemQty + " " + itemName + "(s) added to the inventory.");
+        }
+        displayItems();
+    }
+
+    function addNoOfItem() {
+        var itemName = document.getElementById('itemNameAdd').value;
+        var itemQty = parseInt(document.getElementById('itemQtyAdd').value);
+        var item = supply.find(item => item.itemName === itemName);
+        if (item) {
+            item.noOfItem += itemQty;
+            console.log(itemQty + " " + itemName + "(s) added to the inventory.");
+        } else {
+            console.log(itemName + " does not exist in the inventory.");
+        }
+        displayItems();
+    }
+
+    function subNoOfItem() {
+        var itemName = document.getElementById('itemNameSub').value;
+        var itemQty = parseInt(document.getElementById('itemQtySub').value);
+        var item = supply.find(item => item.itemName === itemName);
+        if (item) {
+            if (item.noOfItem >= itemQty) {
+                item.noOfItem -= itemQty;
+                console.log(itemQty + " " + itemName + "(s) removed from the inventory.");
+            } else {
+                console.log("Insufficient " + itemName + " in the inventory.");
+            }
+        } else {
+            console.log(itemName + " does not exist in the inventory.");
+        }
+        displayItems();
+    }
+
+    function removeItem() {
+        var itemName = document.getElementById('itemNameRemove').value;
+        var index = supply.findIndex(item => item.itemName === itemName);
+        if (index !== -1) {
+            supply.splice(index, 1);
+            console.log(itemName + " removed from the inventory.");
+        } else {
+            console.log(itemName + " does not exist in the inventory.");
+        }
+        displayItems();
+    }
+
+    function displayItems() {
+        var table = document.getElementById("inventoryTable");
+        while (table.rows.length > 1) {
+            table.deleteRow(1);
+        }
+
+        supply.forEach(item => {
+            var row = table.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.textContent = item.itemName;
+            cell2.textContent = item.noOfItem;
+        });
+    }
+
+    displayItems();
+</script>
+
+</body>
+</html>
